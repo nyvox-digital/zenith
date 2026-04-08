@@ -53,18 +53,14 @@ svg{display:block;flex-shrink:0;}
 .pin-msg.err{color:var(--danger);}.pin-msg.ok{color:var(--safe);}.pin-msg.info{color:var(--muted);}
 .pin-back-btn{margin-top:24px;background:none;border:none;color:var(--muted);font-family:var(--font);font-size:0.82rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:8px;}
 
-#userScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:30px 20px;gap:22px;}
-.us-sub{font-size:0.8rem;color:var(--text);text-align:center;}
-.user-cards{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;}
-.user-btn{background:var(--grad-card);border:1.5px solid var(--border);border-radius:20px;padding:20px 18px;cursor:pointer;display:flex;align-items:center;gap:16px;transition:all 0.2s;width:100%;text-align:left;box-shadow:0 6px 24px rgba(0,0,0,0.35);}
-.user-btn:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,0.4);}
-.user-btn.n:hover{border-color:rgba(224,224,224,0.4);}.user-btn.r:hover{border-color:rgba(200,200,200,0.4);}
-.uavatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.uavatar.n{background:rgba(224,224,224,0.08);border:1.5px solid rgba(224,224,224,0.2);}
-.uavatar.r{background:rgba(200,200,200,0.08);border:1.5px solid rgba(200,200,200,0.2);}
-.uname{font-family:var(--font);font-size:1rem;font-weight:700;}
-.uname.n{color:#eeeeee;}.uname.r{color:#cccccc;}
-.usub{font-size:0.75rem;color:var(--text);margin-top:3px;}
+#userScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;position:fixed;inset:0;background:#080a0c;z-index:50;overflow:hidden;}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.login-content{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px 24px;max-width:400px;width:100%;animation:fadeInUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;}
+.login-glow{position:absolute;pointer-events:none;border-radius:50%;}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;max-width:280px;background:#ffffff;color:#111111;border:none;border-radius:100px;padding:15px 24px;font-family:var(--font);font-size:0.9rem;font-weight:600;cursor:pointer;letter-spacing:0.01em;transition:transform 0.22s,box-shadow 0.22s;box-shadow:0 2px 24px rgba(0,0,0,0.5);}
+.google-btn:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,0,0,0.6);}
+.google-btn:active{transform:scale(0.97);}
+.google-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
 
 #app{display:none;}
 .top-bar{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px;max-width:480px;margin:0 auto;}
@@ -490,6 +486,7 @@ canvas{width:100%!important;}
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     // ═══════════════════════════════════════════
     // COLE AQUI SUAS CREDENCIAIS DO FIREBASE
@@ -506,11 +503,25 @@ canvas{width:100%!important;}
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
     window._db = db;
+    window._auth = auth;
     window._fbReady = true;
     window._firebase = { doc, getDoc, setDoc, deleteDoc, collection, getDocs, query, where };
+    window._googleUser = null;
     console.log("Firebase conectado!");
     document.dispatchEvent(new Event('firebase-ready'));
+    onAuthStateChanged(auth, (user) => {
+      window._googleUser = user || null;
+      if (user) {
+        document.dispatchEvent(new CustomEvent('google-auth', { detail: user }));
+      } else {
+        document.dispatchEvent(new Event('google-signout'));
+      }
+    });
+    window._googleSignIn = () => signInWithPopup(auth, googleProvider);
+    window._googleSignOut = () => signOut(auth);
   </script>
 </head>
 <body>
@@ -595,25 +606,48 @@ canvas{width:100%!important;}
   <button id="forgotPinBtn" onclick="openForgotPin()" style="margin-top:8px;background:none;border:none;color:var(--muted);font-family:var(--font);font-size:0.75rem;cursor:pointer;text-decoration:underline;">Esqueci meu PIN</button>
 </div>
 
-<!-- USER SCREEN -->
+<!-- LOGIN SCREEN -->
 <div id="userScreen">
-  <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px">
-    <!-- Logo Z — toque 3x para revelar campo de PIN -->
-    <div style="padding:8px;-webkit-tap-highlight-color:transparent;user-select:none;" onclick="zIconTap()">
-      <svg width="64" height="64" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="ug" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2e2e2e"/><stop offset="1" stop-color="#1e1e1e"/></linearGradient></defs>
+  <!-- Background glows -->
+  <div class="login-glow" style="top:-25%;left:-15%;width:75%;height:75%;background:radial-gradient(ellipse,rgba(255,255,255,0.028) 0%,transparent 65%);"></div>
+  <div class="login-glow" style="bottom:-18%;right:-10%;width:60%;height:60%;background:radial-gradient(ellipse,rgba(255,255,255,0.018) 0%,transparent 70%);"></div>
+  <!-- Lines -->
+  <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);pointer-events:none;"></div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);pointer-events:none;"></div>
+
+  <div class="login-content">
+    <!-- Z Logo — 3 taps reveal Big Z PIN (admin) -->
+    <div style="-webkit-tap-highlight-color:transparent;user-select:none;margin-bottom:30px;" onclick="zIconTap()">
+      <svg width="62" height="62" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="ug" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2e2e2e"/><stop offset="1" stop-color="#1a1a1a"/></linearGradient></defs>
         <rect width="100" height="100" rx="24" fill="url(#ug)"/>
-        <rect x="1" y="1" width="98" height="98" rx="23" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+        <rect x="1" y="1" width="98" height="98" rx="23" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/>
         <line x1="28" y1="30" x2="72" y2="30" stroke="white" stroke-width="7" stroke-linecap="round"/>
         <line x1="72" y1="30" x2="28" y2="70" stroke="white" stroke-width="5.5" stroke-linecap="round"/>
         <line x1="28" y1="70" x2="72" y2="70" stroke="white" stroke-width="7" stroke-linecap="round"/>
-        <circle cx="72" cy="70" r="4" fill="rgba(255,255,255,0.5)"/>
       </svg>
     </div>
-    <div style="font-family:var(--mono);font-size:2rem;letter-spacing:0.22em;font-weight:500;background:linear-gradient(135deg,#ffffff 0%,#dddddd 60%,#999999 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">ZENITH</div>
-    <div class="us-sub">Controle financeiro premium</div>
-    <!-- PIN do Big Z — aparece após 3 toques no ícone Z -->
-    <div id="bigzPinBox" style="display:none;flex-direction:column;align-items:center;gap:10px;margin-top:6px;width:100%;max-width:220px;">
+
+    <!-- Wordmark -->
+    <div style="font-family:var(--mono);font-size:clamp(1.9rem,8vw,3rem);letter-spacing:0.42em;font-weight:500;background:linear-gradient(135deg,#fff 0%,#ccc 55%,#888 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;padding-right:0.42em;margin-bottom:14px;">ZENITH</div>
+
+    <!-- Divider -->
+    <div style="width:32px;height:1px;background:rgba(255,255,255,0.09);margin-bottom:14px;"></div>
+
+    <!-- Tagline -->
+    <div style="font-size:0.7rem;color:#363636;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:54px;">Controle financeiro pessoal</div>
+
+    <!-- Google Sign-In -->
+    <button id="googleSignInBtn" class="google-btn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+      Continuar com Google
+    </button>
+
+    <!-- Status -->
+    <div id="loginMsg" style="margin-top:18px;font-size:0.76rem;color:#383838;min-height:18px;letter-spacing:0.04em;"></div>
+
+    <!-- Big Z PIN box — appears after 3 taps -->
+    <div id="bigzPinBox" style="display:none;flex-direction:column;align-items:center;gap:10px;margin-top:24px;width:100%;max-width:220px;">
       <div style="font-family:var(--mono);font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;">Código de acesso</div>
       <div style="display:flex;gap:10px" id="bigzPinDots">
         <div style="width:14px;height:14px;border-radius:50%;border:2px solid var(--border2)" id="bzpd0"></div>
@@ -638,15 +672,9 @@ canvas{width:100%!important;}
       <div id="bzPinMsg" style="font-size:0.75rem;color:var(--danger);min-height:18px;"></div>
       <button onclick="cancelBigZPin()" style="background:none;border:none;color:var(--muted);font-family:var(--font);font-size:0.78rem;cursor:pointer;padding:4px;">Cancelar</button>
     </div>
-  </div>
-  <div class="user-cards" id="userCardsList">
 
-
-    <div id="dynamicUserCards"></div>
-    <button class="user-btn" style="border:1.5px dashed var(--border2);background:transparent;" onclick="openCreateUser()">
-      <div class="uavatar" style="background:rgba(255,255,255,0.05);border:1.5px solid var(--border2);color:var(--muted)"><svg width="24" height="24"><use href="#ic-plus"/></svg></div>
-      <div><div class="uname" style="color:var(--muted);font-size:0.88rem">Criar usuário</div><div class="usub">Cadastre uma nova pessoa</div></div>
-    </button>
+    <!-- Footer -->
+    <div style="margin-top:52px;font-size:0.62rem;color:#1e1e1e;letter-spacing:0.05em;line-height:1.9;">Seus dados são privados<br>e acessíveis apenas por você</div>
   </div>
 </div>
 
@@ -939,7 +967,7 @@ canvas{width:100%!important;}
       <button onclick="lockSession()" title="Bloquear" style="background:var(--card);border:1px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--danger)';this.style.color='var(--danger)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)'">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </button>
-      <button class="btn-switch" onclick="goBack()"><svg width="13" height="13"><use href="#ic-switch"/></svg> Trocar</button>
+      <button class="btn-switch" onclick="signOutApp()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sair</button>
     </div>
   </div>
 
@@ -1475,6 +1503,13 @@ function instSeq(inst,y,m){return(y-inst.startYear)*12+(m-inst.startMonth);}
 function instMonthLabel(inst,seq){const d=new Date(inst.startYear,inst.startMonth+seq);return MONTHS_SHORT[d.getMonth()];}
 
 function selectUser(u){
+  if(u.startsWith('dyn_')){
+    const uid=u.replace('dyn_','');
+    const users=getDynamicUsers();
+    const user=users.find(x=>x.id===uid);
+    if(user)selectDynamicUser(u,user);
+    return;
+  }
   curUser=u;isJoint=false;curMonth=new Date().getMonth();curYear=new Date().getFullYear();annualYear=curYear;txFilter='all';
   const ud=USERS[u];
   document.getElementById('userScreen').style.display='none';
@@ -1483,7 +1518,6 @@ function selectUser(u){
   const av=document.getElementById('topAv');av.className=`top-av ${ud.cls}`;av.innerHTML=svgU(ud.icon,18,ud.iconColor);
   document.getElementById('topNm').className=`top-nm ${ud.cls}`;document.getElementById('topNm').textContent=ud.name;
   document.getElementById('bHero').className=`balance-hero ${ud.cls}`;
-  // show normal tabs
   document.querySelectorAll('.nav-tab').forEach((b,i)=>b.classList.toggle('active',i===0));
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-home').classList.add('active');
@@ -1505,10 +1539,14 @@ function selectJoint(){ selectUser('neethane'); return; // disabled - single use
 }
 
 function goBack(){
+  if(curUser&&curUser.startsWith('dyn_'))delete USERS[curUser];
+  _sessionKey=null;
+  Object.keys(_txCache).forEach(k=>delete _txCache[k]);
+  Object.keys(_genericCache).forEach(k=>delete _genericCache[k]);
+  curUser=null;isJoint=false;
   document.getElementById('app').style.display='none';
   document.getElementById('navTabs').style.display='none';
   document.getElementById('userScreen').style.display='flex';
-  curUser=null;isJoint=false;
 }
 
 function switchTab(name,btn){
@@ -2218,6 +2256,15 @@ async function sha256(msg){
 function pinAccentColor(u){return '#eeeeee';}
 
 function requestPin(u){
+  if(u.startsWith('dyn_')){
+    const uid=u.replace('dyn_','');
+    const users=getDynamicUsers();
+    const user=users.find(x=>x.id===uid);
+    if(!user)return;
+    if(!hasPin(u)){selectDynamicUser(u,user);return;}
+    openPinScreen(u,'enter');
+    return;
+  }
   const lockUntil=parseInt(localStorage.getItem(pinLockKey(u))||'0');
   if(Date.now()<lockUntil){
     openPinScreen(u,'enter');
@@ -2231,13 +2278,24 @@ function requestPin(u){
   openPinScreen(u,'enter');
 }
 
+function _getDisplayName(u){
+  if(USERS[u])return USERS[u].name;
+  if(u.startsWith('dyn_')){
+    const uid=u.replace('dyn_','');
+    const found=getDynamicUsers().find(x=>x.id===uid);
+    if(found)return found.name;
+  }
+  const gUser=window._googleUser;
+  if(gUser)return gUser.displayName||gUser.email||u;
+  return u;
+}
+
 function openPinScreen(u,mode){
   if(mode==='viewRecovery'){
     pinState={user:u,mode:'viewRecovery',attempt:'',step:1,firstPin:'',tries:0,locked:false};
-    const names={};
     document.getElementById('pinScreen').classList.add('active');
     document.getElementById('userScreen').style.display='none';
-    document.getElementById('pinUserName').textContent=names[u]||u;
+    document.getElementById('pinUserName').textContent=_getDisplayName(u);
     document.getElementById('pinUserName').style.color=pinAccentColor(u);
     document.getElementById('pinTitle').textContent='Confirme o PIN para ver a frase';
     setPinMsg('Confirme sua identidade primeiro','info');
@@ -2246,10 +2304,9 @@ function openPinScreen(u,mode){
     return;
   }
   pinState={user:u,mode,attempt:'',step:1,firstPin:'',tries:parseInt(localStorage.getItem(pinTriesKey(u))||'0'),locked:false};
-  const names={};
   document.getElementById('pinScreen').classList.add('active');
   document.getElementById('userScreen').style.display='none';
-  document.getElementById('pinUserName').textContent=names[u]||u;
+  document.getElementById('pinUserName').textContent=_getDisplayName(u);
   document.getElementById('pinUserName').style.color=pinAccentColor(u);
   if(mode==='enter'){document.getElementById('pinTitle').textContent='Digite seu PIN';setPinMsg('','info');}
   else if(mode==='setup'){document.getElementById('pinTitle').textContent='Criar PIN — Passo 1 de 2';setPinMsg('Escolha 4 números','info');}
@@ -2567,17 +2624,17 @@ let secretBuffer = '';
 let secretTimer = null;
 
 
-// Also listen for keypresses on the user screen
+// Keypress listener for Big Z secret code (admin only)
 document.addEventListener('keypress', function(e) {
-  const us = document.getElementById('userScreen');
-  if (us && us.style.display !== 'none' && !document.getElementById('bigzScreen').style.display.includes('block')) {
-    secretBuffer += e.key;
-    clearTimeout(secretTimer);
-    secretTimer = setTimeout(() => { secretBuffer = ''; }, 3000);
-    if (secretBuffer.endsWith(SECRET_CODE)) {
-      secretBuffer = '';
-      openBigZ();
-    }
+  const gUser = window._googleUser;
+  if (!gUser || gUser.email !== ADMIN_EMAIL) return;
+  if (document.getElementById('bigzScreen').style.display.includes('block')) return;
+  secretBuffer += e.key;
+  clearTimeout(secretTimer);
+  secretTimer = setTimeout(() => { secretBuffer = ''; }, 3000);
+  if (secretBuffer.endsWith(SECRET_CODE)) {
+    secretBuffer = '';
+    openBigZ();
   }
 });
 
@@ -2653,10 +2710,15 @@ function bzPinDelete() {
   bzUpdateDots(_bzPinAttempt);
 }
 
+const ADMIN_EMAIL = 'nyvoxdigital@gmail.com';
 function openBigZ() {
+  const gUser = window._googleUser;
+  if (!gUser || gUser.email !== ADMIN_EMAIL) {
+    showToast('Acesso restrito');
+    return;
+  }
   bzMonth = new Date().getMonth();
   bzYear = new Date().getFullYear();
-  // Show screen FIRST so canvas has dimensions
   document.getElementById('bigzScreen').style.display = 'block';
   // Then render with small delay
   setTimeout(() => {
@@ -3445,7 +3507,9 @@ async function processCUPin() {
 }
 
 async function finishCreateUser(pinHash) {
-  const id = 'u_' + Date.now();
+  // Use Google UID if available, otherwise timestamp fallback
+  const gUser = window._googleUser;
+  const id = (gUser && !cuFromAdmin) ? gUser.uid : ('u_' + Date.now());
   const user = {
     id, name: cuData.name, regime: cuData.regime,
     sal1: cuData.liq1, sal1Day: cuData.sal1Day,
@@ -3455,33 +3519,34 @@ async function finishCreateUser(pinHash) {
     cardLimit: cuData.cardLimit || 0, hasCard: cuData.hasCard || false,
     fixedBills: cuData.fixedBills || [],
     installments: cuData.installments || [],
+    googleEmail: gUser ? gUser.email : null,
     createdAt: new Date().toISOString()
   };
   const users = getDynamicUsers();
   users.push(user);
   saveDynamicUsers(users);
-  // Save fixed bills as custom_fixed for this user
   if (user.fixedBills.length) {
     localStorage.setItem('custom_fixed_dyn_' + id, JSON.stringify(user.fixedBills));
+    fbSet('custom_fixed_dyn_' + id, user.fixedBills);
   }
-  // Save installments as custom_inst for this user
   if (user.installments.length) {
     localStorage.setItem('custom_inst_dyn_' + id, JSON.stringify(user.installments));
+    fbSet('custom_inst_dyn_' + id, user.installments);
   }
-  // Save PIN hash
   localStorage.setItem(pinHashKey('dyn_' + id), pinHash);
-  // Generate recovery phrase
   const words = await generateRecoveryPhrase();
   await storeRecoveryPhrase('dyn_' + id, words);
   document.getElementById('createUserScreen').style.display = 'none';
-  renderDynamicUserCards();
-  if (cuFromAdmin) renderBigZPanel();
-  // Show recovery phrase
+  if (cuFromAdmin) { renderBigZPanel(); }
+  else {
+    // Go directly to app for new Google user
+    selectUser('dyn_' + id);
+  }
   document.getElementById('recoveryContent').innerHTML =
-    `<p style="font-size:0.8rem;color:var(--muted);margin-bottom:12px;line-height:1.5">Usuário <strong style="color:var(--text)">${user.name}</strong> criado! Salve a frase de recuperação:</p>` +
+    `<p style="font-size:0.8rem;color:var(--muted);margin-bottom:12px;line-height:1.5">Conta criada! Salve a frase de recuperação de <strong style="color:var(--text)">${user.name}</strong>:</p>` +
     buildPhraseHTML(words, `<button onclick="closeModal('recoveryModal')" style="width:100%;padding:11px;background:var(--grad-accent);color:#111;border:none;border-radius:10px;font-family:var(--mono);font-size:0.78rem;cursor:pointer;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><polyline points="20 6 9 17 4 12"/></svg> Já salvei</button>`);
   document.getElementById('recoveryModal').classList.add('open');
-  showToast('Usuário ' + user.name + ' criado!');
+  showToast('Bem-vindo, ' + user.name + '!');
 }
 
 // ── FIXED BILLS IN CREATE USER ──
@@ -3618,33 +3683,6 @@ function cuCollectInsts() {
 }
 
 // ── DYNAMIC USER LOGIN & DATA ──
-// Override requestPin to handle dynamic users
-const _origRequestPin = requestPin;
-function requestPin(u) {
-  if (u.startsWith('dyn_')) {
-    const uid = u.replace('dyn_', '');
-    const users = getDynamicUsers();
-    const user = users.find(x => x.id === uid);
-    if (!user) return;
-    if (!hasPin(u)) { selectDynamicUser(u, user); return; }
-    openPinScreen(u, 'enter');
-    return;
-  }
-  _origRequestPin(u);
-}
-
-// Override selectUser to handle dynamic users
-const _origSelectUser = selectUser;
-function selectUser(u) {
-  if (u.startsWith('dyn_')) {
-    const uid = u.replace('dyn_', '');
-    const users = getDynamicUsers();
-    const user = users.find(x => x.id === uid);
-    if (user) selectDynamicUser(u, user);
-    return;
-  }
-  _origSelectUser(u);
-}
 
 function selectDynamicUser(u, user) {
   // Load saved fixed bills and installments for this user
@@ -3675,30 +3713,91 @@ function selectDynamicUser(u, user) {
   render();
 }
 
-// Override goBack to clean up dynamic user
-const _origGoBack = goBack;
-function goBack() {
-  if (curUser && curUser.startsWith('dyn_')) {
-    delete USERS[curUser];
-  }
-  // Clear session key and caches on logout
+function lockSession() {
+  const u = curUser;
+  if (u && u.startsWith('dyn_')) delete USERS[u];
   _sessionKey = null;
   Object.keys(_txCache).forEach(k => delete _txCache[k]);
   Object.keys(_genericCache).forEach(k => delete _genericCache[k]);
-  _origGoBack();
-  renderDynamicUserCards();
+  curUser = null; isJoint = false;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('navTabs').style.display = 'none';
+  // Re-show PIN if still signed in with Google
+  const gUser = window._googleUser;
+  if (gUser) {
+    const uid = gUser.uid;
+    const dynUsers = getDynamicUsers();
+    const found = dynUsers.find(x => x.id === uid);
+    if (found && hasPin('dyn_' + uid)) {
+      openPinScreen('dyn_' + uid, 'enter');
+      return;
+    }
+  }
+  document.getElementById('userScreen').style.display = 'flex';
 }
 
-// Override lockSession to clean dynamic user
-const _origLockSession = lockSession;
-function lockSession() {
-  if (curUser && curUser.startsWith('dyn_')) delete USERS[curUser];
-  _origLockSession();
-  renderDynamicUserCards();
+// ── GOOGLE AUTH FUNCTIONS ──
+async function signInWithGoogle() {
+  const btn = document.getElementById('googleSignInBtn');
+  const msg = document.getElementById('loginMsg');
+  if (btn) btn.disabled = true;
+  if (msg) msg.textContent = 'Abrindo login...';
+  try {
+    if (!window._googleSignIn) throw new Error('Auth não inicializado');
+    await window._googleSignIn();
+    // onAuthStateChanged will handle routing
+  } catch(e) {
+    if (btn) btn.disabled = false;
+    if (msg) msg.textContent = e.code === 'auth/popup-closed-by-user' ? '' : 'Erro ao entrar. Tente novamente.';
+  }
 }
 
-// Init dynamic users on load
-try { renderDynamicUserCards(); } catch(e) {}
+async function signOutApp() {
+  goBack();
+  try {
+    if (window._googleSignOut) await window._googleSignOut();
+  } catch(e) {}
+}
+
+async function handleGoogleUser(gUser) {
+  const msg = document.getElementById('loginMsg');
+  const btn = document.getElementById('googleSignInBtn');
+  if (msg) msg.textContent = 'Verificando conta...';
+
+  // Sync users from Firebase first
+  await syncUsersFromFirebase();
+
+  const uid = gUser.uid;
+  const users = getDynamicUsers();
+  const existing = users.find(u => u.id === uid);
+
+  if (btn) btn.disabled = false;
+  if (msg) msg.textContent = '';
+
+  if (existing) {
+    // User has profile — check PIN
+    requestPin('dyn_' + uid);
+  } else {
+    // New user — show onboarding
+    document.getElementById('userScreen').style.display = 'none';
+    openCreateUser(false);
+  }
+}
+
+// Listen for Google auth events
+document.addEventListener('google-auth', (e) => {
+  handleGoogleUser(e.detail).catch(console.error);
+});
+
+document.addEventListener('google-signout', () => {
+  const btn = document.getElementById('googleSignInBtn');
+  const msg = document.getElementById('loginMsg');
+  if (btn) btn.disabled = false;
+  if (msg) msg.textContent = '';
+  if (!curUser) {
+    document.getElementById('userScreen').style.display = 'flex';
+  }
+});
 
 // Sync from Firebase when ready
 async function initFirebaseSync() {
