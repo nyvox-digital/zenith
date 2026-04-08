@@ -2296,6 +2296,29 @@ function pinDelete(){
 
 async function handlePin(){
   const hash=await sha256(pinState.attempt);
+  const user=pinState.user;
+
+  if(pinState.mode==='viewRecovery'){
+    const stored=localStorage.getItem(pinHashKey(user));
+    if(hash===stored){
+      updateDots(pinState.attempt,'success');
+      setTimeout(()=>{
+        closePinScreen();
+        document.getElementById('recoveryContent').innerHTML=`
+          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;line-height:1.5">Sua frase de recuperação está armazenada com segurança.</p>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:12px">
+            <p style="font-size:0.8rem;color:var(--accent)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Frase de recuperação configurada.</p>
+            <p style="font-size:0.75rem;color:var(--muted);margin-top:6px">Se precisar recuperar o acesso, use "Esqueci meu PIN" na tela de entrada.</p>
+          </div>`;
+        document.getElementById('recoveryModal').classList.add('open');
+      },350);
+    } else {
+      updateDots(pinState.attempt,'error');
+      setPinMsg('PIN incorreto','err');
+      setTimeout(()=>{pinState.attempt='';updateDots('','normal');},500);
+    }
+    return;
+  }
 
   if(pinState.mode==='enter'){
     const stored=localStorage.getItem(pinHashKey(pinState.user));
@@ -2559,41 +2582,6 @@ function openPinScreen(u,mode){
   _origOpenPinScreen(u,mode);
 }
 
-// Single consolidated handlePin override — handles viewRecovery + setup phrase generation
-const _baseHandlePin=handlePin;
-async function handlePin(){
-  const mode=pinState.mode;
-  const user=pinState.user;
-
-  // Handle viewRecovery mode
-  if(mode==='viewRecovery'){
-    const hash=await sha256(pinState.attempt);
-    const stored=localStorage.getItem(pinHashKey(user));
-    if(hash===stored){
-      updateDots(pinState.attempt,'success');
-      setTimeout(()=>{
-        closePinScreen();
-        document.getElementById('recoveryContent').innerHTML=`
-          <p style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;line-height:1.5">Sua frase de recuperação está armazenada com segurança.</p>
-          <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:12px">
-            <p style="font-size:0.8rem;color:var(--accent)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Frase de recuperação configurada.</p>
-            <p style="font-size:0.75rem;color:var(--muted);margin-top:6px">Se precisar recuperar o acesso, use "Esqueci meu PIN" na tela de entrada.</p>
-          </div>`;
-        document.getElementById('recoveryModal').classList.add('open');
-      },350);
-    } else {
-      updateDots(pinState.attempt,'error');
-      setPinMsg('PIN incorreto','err');
-      setTimeout(()=>{pinState.attempt='';updateDots('','normal');},500);
-    }
-    return;
-  }
-
-  // Run base handlePin
-  await _baseHandlePin();
-
-  // Note: recovery phrase is now generated inside base handlePin's setup flow
-}
 
 // ── SECRET CODE & BIG Z ──
 const SECRET_CODE = '2411';
