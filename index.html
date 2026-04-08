@@ -2235,6 +2235,19 @@ function requestPin(u){
 }
 
 function openPinScreen(u,mode){
+  if(mode==='viewRecovery'){
+    pinState={user:u,mode:'viewRecovery',attempt:'',step:1,firstPin:'',tries:0,locked:false};
+    const names={};
+    document.getElementById('pinScreen').classList.add('active');
+    document.getElementById('userScreen').style.display='none';
+    document.getElementById('pinUserName').textContent=names[u]||u;
+    document.getElementById('pinUserName').style.color=pinAccentColor(u);
+    document.getElementById('pinTitle').textContent='Confirme o PIN para ver a frase';
+    setPinMsg('Confirme sua identidade primeiro','info');
+    updateDots('','normal');
+    const fb=document.getElementById('forgotPinBtn');if(fb)fb.style.display='none';
+    return;
+  }
   pinState={user:u,mode,attempt:'',step:1,firstPin:'',tries:parseInt(localStorage.getItem(pinTriesKey(u))||'0'),locked:false};
   const names={};
   document.getElementById('pinScreen').classList.add('active');
@@ -2245,6 +2258,8 @@ function openPinScreen(u,mode){
   else if(mode==='setup'){document.getElementById('pinTitle').textContent='Criar PIN — Passo 1 de 2';setPinMsg('Escolha 4 números','info');}
   else if(mode==='remove'){document.getElementById('pinTitle').textContent='Confirme o PIN atual';setPinMsg('Digite o PIN para removê-lo','info');}
   updateDots('','normal');
+  const fb=document.getElementById('forgotPinBtn');
+  if(fb)fb.style.display=mode==='enter'&&hasRecovery(u)?'block':'none';
 }
 
 function closePinScreen(){
@@ -2550,26 +2565,6 @@ async function verifyRecoveryPhrase(){
   }
 }
 
-// Override openPinScreen to handle viewRecovery mode
-const _origOpenPinScreen=openPinScreen;
-function openPinScreen(u,mode){
-  if(mode==='viewRecovery'){
-    pinState={user:u,mode:'viewRecovery',attempt:'',step:1,firstPin:'',tries:0,locked:false};
-    const names={};
-    document.getElementById('pinScreen').classList.add('active');
-    document.getElementById('userScreen').style.display='none';
-    document.getElementById('pinUserName').textContent=names[u]||u;
-    document.getElementById('pinUserName').style.color=pinAccentColor(u);
-    document.getElementById('pinTitle').textContent='Confirme o PIN para ver a frase';
-    setPinMsg('Confirme sua identidade primeiro','info');
-    updateDots('','normal');
-    const fb=document.getElementById('forgotPinBtn');if(fb)fb.style.display='none';
-    return;
-  }
-  const fb=document.getElementById('forgotPinBtn');
-  if(fb)fb.style.display=mode==='enter'&&hasRecovery(u)?'block':'none';
-  _origOpenPinScreen(u,mode);
-}
 
 
 // ── SECRET CODE & BIG Z ──
