@@ -1742,11 +1742,6 @@ function getAllInsts(user){
   return [...base, ...getCustomInsts(user)];
 }
 
-function getAllFixed(user){
-  const ud = USERS[user];
-  const base = ud ? (ud.fixed||[]) : [];
-  return [...base, ...getCustomFixed(user)];
-}
 function getInstallmentTotal(ud,year,month,user){
   user=user||curUser;
   return getAllInsts(user).reduce((s,inst)=>{const seq=instSeq(inst,year,month);return(seq>=0&&seq<inst.total)?s+inst.val:s;},0);
@@ -2098,6 +2093,8 @@ function renderConfig(){
   document.getElementById('cfg-va').value=ud.benefits.va;
   renderConfigFixed();
   renderWeeklySummary();
+  updatePinStatus();
+  updateRecoveryBtn();
 }
 
 function saveProfile(){
@@ -2427,9 +2424,6 @@ function updatePinStatus(){
   }
 }
 
-// Patch renderConfig to include PIN status update
-const _baseRenderConfig=renderConfig;
-function renderConfig(){_baseRenderConfig();updatePinStatus();updateRecoveryBtn();}
 
 // ── RECOVERY PHRASE SYSTEM ──
 // 200 simple Portuguese words for the recovery phrase
@@ -2572,16 +2566,6 @@ const SECRET_CODE = '2411';
 let secretBuffer = '';
 let secretTimer = null;
 
-function checkSecretCode(val) {
-  secretBuffer = val;
-  clearTimeout(secretTimer);
-  secretTimer = setTimeout(() => { secretBuffer = ''; document.getElementById('secretCodeInput').value = ''; }, 3000);
-  if (secretBuffer === SECRET_CODE) {
-    secretBuffer = '';
-    document.getElementById('secretCodeInput').value = '';
-    openBigZ();
-  }
-}
 
 // Also listen for keypresses on the user screen
 document.addEventListener('keypress', function(e) {
