@@ -425,17 +425,6 @@ canvas{width:100%!important;}
   /* ─── TELA HOME: coluna única, mais larga ─── */
   .bal-amount{font-size:2.6rem;}
 
-  /* ─── TELA GASTOS: form esquerda / lista direita ─── */
-  #screen-gastos.active{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    column-gap:32px;
-    align-items:start;
-  }
-  /* Esquerda: spacer + add-box + "Nova parcela" + btn add inst */
-  #screen-gastos > *:nth-child(-n+4){grid-column:1;}
-  /* Direita: "Lançamentos" + filter + list + export */
-  #screen-gastos > *:nth-child(n+5){grid-column:2;}
 
   /* ─── TELA GRAFICOS: gráficos lado a lado ─── */
   #screen-graficos.active{
