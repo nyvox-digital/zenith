@@ -837,10 +837,12 @@ canvas{width:100%!important;}
           <span style="font-family:var(--mono);font-size:1rem;color:var(--safe)" id="salCalcTotal">R$ 0,00</span>
         </div>
       </div>
-      <button onclick="showCUStep(1)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
-      </button>
-      <button class="btn-add" onclick="cuNext(2)">Continuar →</button>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="showCUStep(1)" style="flex:1;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+        <button class="btn-add" onclick="cuNext(2)" style="flex:2">Continuar →</button>
+      </div>
     </div>
 
     <!-- Step 3: Benefícios -->
@@ -873,10 +875,12 @@ canvas{width:100%!important;}
           <div id="cu-VT-val" style="display:none"><div class="ig"><label>Valor mensal (R$)</label><input type="number" id="cu-vt" placeholder="0,00" step="0.01"></div></div>
         </div>
       </div>
-      <button onclick="showCUStep(2)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
-      </button>
-      <button class="btn-add" onclick="cuNext(3)">Continuar →</button>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="showCUStep(2)" style="flex:1;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+        <button class="btn-add" onclick="cuNext(3)" style="flex:2">Continuar →</button>
+      </div>
     </div>
 
     <!-- Step 4: Cartão -->
@@ -890,10 +894,12 @@ canvas{width:100%!important;}
       <div id="cu-card-limit-group" style="display:none;margin-bottom:20px">
         <div class="ig"><label>Limite do cartão (R$)</label><input type="number" id="cu-card-limit" placeholder="0,00" step="0.01"></div>
       </div>
-      <button onclick="showCUStep(3)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
-      </button>
-      <button class="btn-add" onclick="cuNext(4)" id="cuStep4Btn" style="opacity:0.4;pointer-events:none;">Continuar →</button>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="showCUStep(3)" style="flex:1;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+        <button class="btn-add" onclick="cuNext(4)" id="cuStep4Btn" style="flex:2;opacity:0.4;pointer-events:none;">Continuar →</button>
+      </div>
     </div>
 
     <!-- Step 5: Contas fixas -->
@@ -904,10 +910,12 @@ canvas{width:100%!important;}
       <button onclick="cuAddCustomFixed()" style="width:100%;padding:10px;background:transparent;color:var(--accent);border:1px dashed rgba(224,224,224,0.25);border-radius:10px;font-family:var(--mono);font-size:0.72rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:20px">
         <svg width="13" height="13"><use href="#ic-plus"/></svg> Adicionar outra conta
       </button>
-      <button onclick="showCUStep(4)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
-      </button>
-      <button class="btn-add" onclick="cuNext(5)">Continuar →</button>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="showCUStep(4)" style="flex:1;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+        <button class="btn-add" onclick="cuNext(5)" style="flex:2">Continuar →</button>
+      </div>
     </div>
 
     <!-- Step 6: Parcelas -->
@@ -918,15 +926,17 @@ canvas{width:100%!important;}
       <button onclick="cuAddInst()" style="width:100%;padding:10px;background:transparent;color:var(--blue);border:1px dashed rgba(196,168,130,0.35);border-radius:10px;font-family:var(--mono);font-size:0.72rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:20px">
         <svg width="13" height="13"><use href="#ic-plus"/></svg> Adicionar parcela
       </button>
-      <button onclick="showCUStep(5)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
-      </button>
-      <button class="btn-add" onclick="cuNext(6)">Continuar →</button>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button onclick="showCUStep(5)" style="flex:1;padding:14px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+        <button class="btn-add" onclick="cuNext(6)" style="flex:2">Continuar →</button>
+      </div>
     </div>
 
     <!-- Step 7: PIN -->
     <div id="cuStep7" style="display:none">
-      <button onclick="showCUStep(6)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;">
+      <button onclick="showCUStep(6)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0;margin-bottom:16px;border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
       </button>
       <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px">Crie seu PIN</div>
