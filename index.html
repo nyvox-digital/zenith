@@ -516,6 +516,77 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
 .youth-goal-pct{font-size:1.4rem;font-weight:800;color:#a78bfa;text-align:center;margin-bottom:2px;}
 .youth-goal-msg{font-size:0.74rem;color:#7070aa;text-align:center;}
 .youth-mesada-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:20px;padding:4px 12px;font-size:0.72rem;color:#a78bfa;margin-bottom:12px;}
+
+/* ══════════════════════════════════════
+   TEMA CLARO
+══════════════════════════════════════ */
+body.light-mode{
+  --bg:#f4f4f4;--bg2:#ececec;--card:#ffffff;--card2:#f8f8f8;
+  --border:#d8d8d8;--border2:#c8c8c8;
+  --accent:#222222;--accent2:#e53935;--accent3:#111111;
+  --blue:#5c6bc0;--pink:#e91e63;--orange:#f57c00;--purple:#7b1fa2;
+  --text:#1a1a1a;--muted:#757575;--muted2:#9e9e9e;
+  --safe:#2e7d32;--danger:#c62828;
+  --grad-card:linear-gradient(145deg,#ffffff,#f4f4f4);
+  --grad-accent:linear-gradient(135deg,#333333,#555555);
+  background:#f4f4f4;color:#1a1a1a;
+}
+body.light-mode .nav-tabs{background:rgba(244,244,244,0.97);border-top-color:#d8d8d8;}
+body.light-mode .pin-key{background:#fff;border-color:#d8d8d8;color:#1a1a1a;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+body.light-mode .balance-hero{box-shadow:0 4px 20px rgba(0,0,0,0.1);}
+body.light-mode .add-box{background:#fff;border-color:#d8d8d8;}
+body.light-mode input,body.light-mode select,body.light-mode textarea{background:#f4f4f4;border-color:#d8d8d8;color:#1a1a1a;}
+body.light-mode .tx{background:#fff;border-color:#e8e8e8;}
+body.light-mode #pinScreen{background:#f4f4f4;}
+body.light-mode .modal{background:#ffffff;border-color:#d8d8d8;}
+body.light-mode .modal-overlay{background:rgba(0,0,0,0.4);}
+body.light-mode .pbar{background:#e0e0e0;}
+body.light-mode .chart-wrap{background:#fff;border-color:#e0e0e0;}
+body.light-mode .fi{background:#f8f8f8;border-color:#e0e0e0;}
+body.light-mode .tip{background:#fff;border-color:#e0e0e0;}
+body.light-mode .prog-card{background:#fff;border-color:#e0e0e0;}
+body.light-mode .goal-card{background:#fff;border-color:#e0e0e0;}
+body.light-mode .nav-tab{color:#aaaaaa;}
+body.light-mode .nav-tab.active{color:#222222;}
+body.light-mode .filter-btn{background:#f0f0f0;border-color:#d8d8d8;color:#555;}
+body.light-mode .filter-btn.active{background:#222;color:#fff;border-color:#222;}
+
+/* ══════════════════════════════════════
+   CONQUISTAS (BADGES)
+══════════════════════════════════════ */
+.achievement-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,#312e81,#1e1b4b);border:1px solid #4338ca;border-radius:16px;padding:14px 20px;display:flex;align-items:center;gap:12px;z-index:9999;opacity:0;transition:all 0.4s cubic-bezier(.4,0,.2,1);pointer-events:none;min-width:240px;max-width:320px;}
+.achievement-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.achievement-icon{font-size:1.6rem;flex-shrink:0;}
+.achievement-text{flex:1;}
+.achievement-title{font-size:0.65rem;color:#a78bfa;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+.achievement-name{font-size:0.9rem;font-weight:700;color:#f0f0ff;}
+
+/* ══════════════════════════════════════
+   TUTORIAL
+══════════════════════════════════════ */
+.tutorial-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;}
+.tutorial-overlay.active{display:flex;}
+.tutorial-box{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:28px 24px;max-width:340px;width:100%;text-align:center;}
+.tutorial-step-dots{display:flex;justify-content:center;gap:6px;margin-bottom:20px;}
+.tutorial-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);}
+.tutorial-step-dot.active{background:var(--accent);width:20px;border-radius:4px;}
+.tutorial-icon{font-size:2.8rem;margin-bottom:12px;}
+.tutorial-title{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
+.tutorial-desc{font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:24px;}
+
+/* Recurring badge */
+.tx-recurrent{display:inline-flex;align-items:center;gap:3px;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:1px 6px;font-size:0.62rem;color:#60a5fa;margin-left:4px;}
+
+/* Receipt photo */
+.tx-photo{width:100%;max-height:160px;object-fit:cover;border-radius:8px;margin-top:8px;cursor:pointer;}
+.receipt-thumb{width:36px;height:36px;object-fit:cover;border-radius:6px;cursor:pointer;}
+
+/* Theme toggle */
+.theme-toggle{display:flex;align-items:center;justify-content:space-between;background:var(--grad-card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:14px;}
+.toggle-switch{width:44px;height:24px;border-radius:12px;background:var(--border2);cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle-switch.on{background:var(--accent);}
+.toggle-switch::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.toggle-switch.on::after{left:23px;}
 </style>
   <!-- Firebase SDK -->
   <script type="module">
@@ -1103,7 +1174,8 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
           <span>Meta: <span id="youthGoalTarget">—</span></span>
         </div>
         <div class="youth-goal-pct" id="youthGoalPct">0%</div>
-        <div class="youth-goal-msg" id="youthGoalMsg">Continue economizando! 💪</div>
+        <div class="youth-goal-msg" id="youthGoalMsg">Continue economizando!</div>
+        <button onclick="openModal('goalHistoryModal');renderGoalHistory()" style="width:100%;margin-top:10px;padding:8px;background:transparent;border:1px solid rgba(167,139,250,0.2);border-radius:10px;color:#7070aa;font-family:var(--font);font-size:0.72rem;cursor:pointer;">Ver metas concluídas</button>
       </div>
     </div>
 
@@ -1149,6 +1221,16 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
           <select id="txCat"><option value="food">Alimentação</option><option value="car">Transporte</option><option value="health">Saúde</option><option value="game">Lazer</option><option value="shirt">Roupas</option><option value="home">Casa</option><option value="box">Outros</option></select>
         </div>
         <div class="ig full"><label>Observação (opcional)</label><textarea id="txObs" placeholder="Ex: parcelado 3x, dividido com alguém..."></textarea></div>
+        <div class="ig full" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.82rem;color:var(--muted)">
+            <input type="checkbox" id="txRecorrente" style="width:16px;height:16px;accent-color:var(--accent)"> Gasto recorrente (todo mês)
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.8rem;color:var(--blue);white-space:nowrap;">
+            <input type="file" id="txPhoto" accept="image/*" style="display:none" onchange="previewReceipt(this)">
+            <button type="button" onclick="document.getElementById('txPhoto').click()" style="background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--blue);font-family:var(--font);font-size:0.75rem;padding:6px 10px;cursor:pointer;">&#128247; Comprovante</button>
+          </label>
+        </div>
+        <div id="txPhotoPreview" style="display:none;margin-top:4px;"></div>
       </div>
       <button class="btn-add" onclick="addTx()"><svg width="15" height="15"><use href="#ic-plus"/></svg> REGISTRAR GASTO</button>
     </div>
@@ -1288,6 +1370,14 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
         Ver frase de recuperação
       </button>
     </div>
+    <p class="sec">Aparência</p>
+    <div class="theme-toggle">
+      <div>
+        <div style="font-size:0.88rem;font-weight:600;">Tema claro</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Alternar entre dark e light</div>
+      </div>
+      <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()"></div>
+    </div>
     <p class="sec">Backup & Restauração</p>
     <div class="add-box">
       <div class="add-hdr"><svg width="14" height="14" style="color:var(--accent3)"><use href="#ic-download"/></svg><h3>Seus dados</h3></div>
@@ -1381,6 +1471,41 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
     <div class="modal-btns"><button class="modal-btn cancel" onclick="closeModal('depositModal')">Cancelar</button><button class="modal-btn confirm" onclick="saveDeposit()">Depositar</button></div>
   </div>
 </div>
+<!-- TUTORIAL OVERLAY -->
+<div class="tutorial-overlay" id="tutorialOverlay">
+  <div class="tutorial-box">
+    <div class="tutorial-step-dots">
+      <div class="tutorial-step-dot active" id="tdot0"></div>
+      <div class="tutorial-step-dot" id="tdot1"></div>
+      <div class="tutorial-step-dot" id="tdot2"></div>
+      <div class="tutorial-step-dot" id="tdot3"></div>
+    </div>
+    <div id="tutorialContent"></div>
+    <div style="display:flex;gap:10px;margin-top:4px;">
+      <button id="tutorialSkip" onclick="closeTutorial()" style="flex:1;padding:12px;background:transparent;border:1.5px solid var(--border);border-radius:12px;color:var(--muted);font-family:var(--font);font-size:0.82rem;cursor:pointer;">Pular</button>
+      <button id="tutorialNext" onclick="tutorialNext()" style="flex:2;padding:12px;background:var(--grad-accent);border:none;border-radius:12px;color:#fff;font-family:var(--font);font-size:0.82rem;cursor:pointer;font-weight:600;">Próximo →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACHIEVEMENT TOAST -->
+<div class="achievement-toast" id="achievementToast">
+  <div class="achievement-icon" id="achievementIcon">&#127942;</div>
+  <div class="achievement-text">
+    <div class="achievement-title">Conquista desbloqueada!</div>
+    <div class="achievement-name" id="achievementName"></div>
+  </div>
+</div>
+
+<!-- GOAL HISTORY MODAL -->
+<div class="modal-overlay" id="goalHistoryModal">
+  <div class="modal">
+    <div class="modal-title">&#127942; Metas concluídas</div>
+    <div id="goalHistoryContent" style="max-height:300px;overflow-y:auto;"></div>
+    <div class="modal-btns"><button class="modal-btn cancel" onclick="closeModal('goalHistoryModal')">Fechar</button></div>
+  </div>
+</div>
+
 <!-- SUPERVISION MODAL -->
 <div class="modal-overlay" id="supervisionModal">
   <div class="modal" style="max-width:340px">
@@ -1714,7 +1839,7 @@ function switchTab(name,btn){
   if(name==='home') render();
 }
 
-function changeMonth(d){curMonth+=d;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}render();}
+function changeMonth(d){curMonth+=d;if(curMonth>11){curMonth=0;curYear++;}if(curMonth<0){curMonth=11;curYear--;}applyRecurringTxs();render();}
 function changeAnnualYear(d){annualYear+=d;renderAnnual();}
 function showAnnualTab(tab,btn){annualTab=tab;document.querySelectorAll('#screen-anual .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('annualMensalView').style.display=tab==='mensal'?'block':'none';document.getElementById('annualAnosView').style.display=tab==='anos'?'block':'none';if(tab==='anos')renderMultiYear();}
 function setFilter(f,btn){txFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderTxList();}
@@ -1999,10 +2124,16 @@ function deleteCustomInst(instId){
 function addTx(){
   const desc=document.getElementById('txDesc').value.trim();const val=parseFloat(document.getElementById('txVal').value);
   const type=document.getElementById('txType').value;const cat=document.getElementById('txCat').value;const obs=document.getElementById('txObs').value.trim();
+  const recorrente=document.getElementById('txRecorrente')?.checked||false;
   const inp=document.getElementById('txDesc');
   if(!desc||!val||val<=0){inp.style.borderColor='var(--danger)';setTimeout(()=>inp.style.borderColor='',1200);return;}
-  const txs=getTxs();txs.push({id:Date.now(),desc,val,type,cat,obs,date:new Date().toLocaleDateString('pt-BR')});
-  saveTxs(txs);inp.value='';document.getElementById('txVal').value='';document.getElementById('txObs').value='';render();
+  const txs=getTxs();
+  txs.push({id:Date.now(),desc,val,type,cat,obs,date:new Date().toLocaleDateString('pt-BR'),recorrente,photo:_txPhotoData||null});
+  saveTxs(txs);
+  inp.value='';document.getElementById('txVal').value='';document.getElementById('txObs').value='';
+  if(document.getElementById('txRecorrente'))document.getElementById('txRecorrente').checked=false;
+  _txPhotoData=null;document.getElementById('txPhotoPreview').style.display='none';document.getElementById('txPhoto').value='';
+  render();checkAchievements();
 }
 function deleteTx(id){saveTxs(getTxs().filter(t=>t.id!==id));render();}
 function openEdit(id){
@@ -2048,6 +2179,187 @@ function exportCSV(){
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${ud.name}_${MONTHS[curMonth]}_${curYear}.csv`;a.click();
 }
 
+// ══════════════════════════════════════
+// GASTOS RECORRENTES
+// ══════════════════════════════════════
+function applyRecurringTxs() {
+  if (!curUser || !USERS[curUser]) return;
+  const key = 'tx_' + curUser + '_' + curYear + '_' + curMonth;
+  const existing = JSON.parse(localStorage.getItem(key) || '[]');
+  if (existing.some(t => t._autoRecurring)) return; // already applied
+  let pm = curMonth - 1, py = curYear;
+  if (pm < 0) { pm = 11; py--; }
+  const prevKey = 'tx_' + curUser + '_' + py + '_' + pm;
+  const prevTxs = JSON.parse(localStorage.getItem(prevKey) || '[]');
+  const recurring = prevTxs.filter(t => t.recorrente);
+  if (!recurring.length) return;
+  const today = new Date().toLocaleDateString('pt-BR');
+  const newTxs = recurring.map(t => ({ ...t, id: Date.now() + Math.random(), date: today, _autoRecurring: true }));
+  const merged = [...existing, ...newTxs];
+  localStorage.setItem(key, JSON.stringify(merged));
+}
+
+// ══════════════════════════════════════
+// FOTO DO COMPROVANTE
+// ══════════════════════════════════════
+let _txPhotoData = null;
+function previewReceipt(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    _txPhotoData = e.target.result;
+    const prev = document.getElementById('txPhotoPreview');
+    prev.style.display = 'block';
+    prev.innerHTML = `<img src="${_txPhotoData}" style="max-height:80px;border-radius:8px;max-width:100%;">
+      <button onclick="_txPhotoData=null;document.getElementById('txPhotoPreview').style.display='none';document.getElementById('txPhoto').value=''" style="display:block;margin-top:4px;background:transparent;border:none;color:var(--danger);font-size:0.72rem;cursor:pointer;">Remover</button>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══════════════════════════════════════
+// NOTIFICAÇÕES
+// ══════════════════════════════════════
+function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+}
+function checkBudgetNotification(pct, income) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  const key = 'notif_sent_' + curUser + '_' + curYear + '_' + curMonth;
+  if (localStorage.getItem(key)) return;
+  if (pct >= 90) {
+    new Notification('⚠️ Zenith — Orçamento crítico!', { body: `Você usou ${pct}% da sua renda este mês.` });
+    localStorage.setItem(key, '1');
+  } else if (pct >= 75) {
+    new Notification('📊 Zenith — Atenção ao orçamento', { body: `Você já usou ${pct}% da sua renda este mês.` });
+    localStorage.setItem(key, '1');
+  }
+}
+
+// ══════════════════════════════════════
+// TEMA CLARO
+// ══════════════════════════════════════
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  localStorage.setItem('zenith_theme', isLight ? 'light' : 'dark');
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.classList.toggle('on', isLight);
+}
+function applyStoredTheme() {
+  const theme = localStorage.getItem('zenith_theme');
+  if (theme === 'light') {
+    document.body.classList.add('light-mode');
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) toggle.classList.add('on');
+  }
+}
+
+// ══════════════════════════════════════
+// CONQUISTAS (YOUTH)
+// ══════════════════════════════════════
+const ACHIEVEMENTS = [
+  { id: 'first_tx', icon: '&#127381;', name: 'Primeiro registro!', check: (txs) => txs.length >= 1 },
+  { id: 'saver', icon: '&#129297;', name: 'Economizador — 5 gastos registrados', check: (txs) => txs.length >= 5 },
+  { id: 'goal_50', icon: '&#11088;', name: 'Meio caminho andado — 50% da meta!', check: (txs, pct) => pct >= 50 },
+  { id: 'goal_done', icon: '&#127942;', name: 'Meta alcançada! Parabéns!', check: (txs, pct) => pct >= 100 },
+  { id: 'no_spend', icon: '&#129321;', name: 'Dia econômico — sem gastos hoje!', check: (txs) => { const today = new Date().toLocaleDateString('pt-BR'); return txs.length > 0 && !txs.some(t => t.date === today); } },
+];
+function checkAchievements() {
+  if (!curUser || !USERS[curUser] || !USERS[curUser]._isYouth) return;
+  const uid = curUser.replace('dyn_','');
+  const users = getDynamicUsers();
+  const user = users.find(x => x.id === uid);
+  if (!user) return;
+  const txs = getTxs();
+  const mesada = user.salLiquido || user.sal1 || 0;
+  const gasto = txs.reduce((s,t) => s+(t.val||0), 0);
+  const saldo = Math.max(mesada - gasto, 0);
+  const pct = user.goalValue > 0 ? Math.min(100, Math.round((saldo / user.goalValue) * 100)) : 0;
+  const earned = JSON.parse(localStorage.getItem('achievements_' + curUser) || '[]');
+  ACHIEVEMENTS.forEach(a => {
+    if (earned.includes(a.id)) return;
+    if (a.check(txs, pct)) {
+      earned.push(a.id);
+      localStorage.setItem('achievements_' + curUser, JSON.stringify(earned));
+      showAchievement(a.icon, a.name);
+      // Save to goal history if goal done
+      if (a.id === 'goal_done' && user.goalName) saveCompletedGoal(user);
+    }
+  });
+}
+function showAchievement(icon, name) {
+  const toast = document.getElementById('achievementToast');
+  document.getElementById('achievementIcon').innerHTML = icon;
+  document.getElementById('achievementName').textContent = name;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ══════════════════════════════════════
+// HISTÓRICO DE METAS
+// ══════════════════════════════════════
+function saveCompletedGoal(user) {
+  const key = 'completed_goals_' + curUser;
+  const goals = JSON.parse(localStorage.getItem(key) || '[]');
+  goals.push({ name: user.goalName, value: user.goalValue, date: new Date().toLocaleDateString('pt-BR') });
+  localStorage.setItem(key, JSON.stringify(goals));
+}
+function renderGoalHistory() {
+  const key = 'completed_goals_' + curUser;
+  const goals = JSON.parse(localStorage.getItem(key) || '[]');
+  const el = document.getElementById('goalHistoryContent');
+  if (!goals.length) { el.innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px;font-size:0.82rem;">Nenhuma meta concluída ainda.<br>Continue economizando!</div>'; return; }
+  el.innerHTML = goals.reverse().map(g => `
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(124,58,237,0.08);border-radius:12px;margin-bottom:8px;">
+      <span style="font-size:1.4rem;">&#127942;</span>
+      <div>
+        <div style="font-weight:600;color:var(--text);font-size:0.88rem;">${g.name}</div>
+        <div style="font-size:0.74rem;color:var(--muted);">${fmt(g.value)} · ${g.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════
+// TUTORIAL DE BOAS-VINDAS
+// ══════════════════════════════════════
+const TUTORIAL_STEPS = [
+  { icon: '&#128176;', title: 'Bem-vindo ao Zenith!', desc: 'Seu controle financeiro pessoal. Vamos te mostrar como funciona em 3 passos rápidos.' },
+  { icon: '&#128203;', title: 'Registre seus gastos', desc: 'Na aba Gastos, anote tudo que você gastar. Categorize por tipo para ver onde seu dinheiro vai.' },
+  { icon: '&#128200;', title: 'Acompanhe nos Gráficos', desc: 'Veja gráficos dos seus gastos por categoria e compare com meses anteriores.' },
+  { icon: '&#127919;', title: 'Defina metas', desc: 'Na tela inicial, defina quanto quer economizar por mês. O app te ajuda a manter o foco!' },
+];
+let tutorialStep = 0;
+function showTutorial() {
+  const key = 'tutorial_done_' + curUser;
+  if (localStorage.getItem(key)) return;
+  tutorialStep = 0;
+  renderTutorialStep();
+  document.getElementById('tutorialOverlay').classList.add('active');
+}
+function renderTutorialStep() {
+  const s = TUTORIAL_STEPS[tutorialStep];
+  document.getElementById('tutorialContent').innerHTML = `
+    <div class="tutorial-icon">${s.icon}</div>
+    <div class="tutorial-title">${s.title}</div>
+    <div class="tutorial-desc">${s.desc}</div>`;
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('tdot' + i);
+    if (dot) { dot.classList.toggle('active', i === tutorialStep); }
+  }
+  const nextBtn = document.getElementById('tutorialNext');
+  if (nextBtn) nextBtn.textContent = tutorialStep === 3 ? 'Começar!' : 'Próximo →';
+}
+function tutorialNext() {
+  if (tutorialStep < TUTORIAL_STEPS.length - 1) { tutorialStep++; renderTutorialStep(); }
+  else closeTutorial();
+}
+function closeTutorial() {
+  document.getElementById('tutorialOverlay').classList.remove('active');
+  localStorage.setItem('tutorial_done_' + curUser, '1');
+}
+
 function render(){
   if(isJoint){renderJoint();return;}
   if(!curUser||!USERS[curUser])return;
@@ -2081,6 +2393,7 @@ function render(){
   const livres=income-fixedGrand;const totalBenef=ud.benefits.va+ud.benefits.vr;
   document.getElementById('tipList').innerHTML=`<li>Renda: <strong style="color:var(--accent)">${fmt(income)}/mês</strong></li><li>iFood Benefícios: <strong style="color:#e0a020">+ ${fmt(totalBenef)}</strong></li><li>Parcelas + fixos: <strong style="color:var(--accent2)">${fmt(fixedGrand)}</strong> (${Math.round(fixedGrand/income*100)}% da renda)</li><li>Disponível após fixos: <strong style="color:var(--accent3)">${fmt(livres)}</strong></li><li>Já gastou este mês: <strong style="color:var(--accent2)">${fmt(varTotal)}</strong></li><li>Saldo: <strong style="color:${balance>=0?'var(--safe)':'var(--danger)'}">${(balance<0?'- ':'')+fmt(balance)}</strong></li><li>Limite seguro do cartão: <strong>${fmt(ud.cardLimit*0.3)}</strong></li>`;
   renderTxList();
+  checkBudgetNotification(pct, income);
   // Youth mode extra render
   if (curUser && USERS[curUser] && USERS[curUser]._isYouth) renderYouthGoal();
 }
@@ -2088,7 +2401,12 @@ function render(){
 function renderTxList(){
   const txs=getTxs();const filtered=txFilter==='all'?txs:txs.filter(t=>t.cat===txFilter);const txList=document.getElementById('txList');
   if(filtered.length===0){txList.innerHTML='<div class="empty">Nenhum lançamento encontrado</div>';return;}
-  txList.innerHTML=[...filtered].reverse().map(t=>`<div class="tx"><div class="tx-main"><div class="tx-l"><div class="tx-ic" style="background:${CAT_COLORS[t.cat]}22">${svgU(CAT_ICONS[t.cat],16,CAT_COLORS[t.cat])}</div><div><div class="tx-nm">${t.desc}</div><div class="tx-mt">${t.date} <span class="tag ${t.type}">${svgU(TYPE_ICONS[t.type],9,'currentColor')} ${TYPE_LABELS[t.type]}</span></div></div></div><div class="tx-r"><div class="tx-v">− ${fmt(t.val)}</div><button class="tx-btn" onclick="openEdit(${t.id})">${svgU('ic-edit',14,'currentColor')}</button><button class="tx-btn del" onclick="deleteTx(${t.id})">${svgU('ic-trash',14,'currentColor')}</button></div></div>${t.obs?`<div class="tx-obs">${svgU('ic-note',11,'var(--muted)')} ${t.obs}</div>`:''}</div>`).join('');
+  txList.innerHTML=[...filtered].reverse().map(t=>`<div class="tx"><div class="tx-main"><div class="tx-l"><div class="tx-ic" style="background:${CAT_COLORS[t.cat]}22">${svgU(CAT_ICONS[t.cat],16,CAT_COLORS[t.cat])}</div><div><div class="tx-nm">${t.desc}${t.recorrente?'<span class="tx-recurrent">&#8635; recorrente</span>':''}</div><div class="tx-mt">${t.date} <span class="tag ${t.type}">${svgU(TYPE_ICONS[t.type],9,'currentColor')} ${TYPE_LABELS[t.type]}</span></div></div></div><div class="tx-r">${t.photo?`<img src="${t.photo}" class="receipt-thumb" onclick="viewReceipt('${t.id}')" title="Ver comprovante">`:''}<div class="tx-v">− ${fmt(t.val)}</div><button class="tx-btn" onclick="openEdit(${t.id})">${svgU('ic-edit',14,'currentColor')}</button><button class="tx-btn del" onclick="deleteTx(${t.id})">${svgU('ic-trash',14,'currentColor')}</button></div></div>${t.obs?`<div class="tx-obs">${svgU('ic-note',11,'var(--muted)')} ${t.obs}</div>`:''}</div>`).join('');
+}
+function viewReceipt(id){
+  const t=getTxs().find(t=>String(t.id)===String(id));if(!t||!t.photo)return;
+  const w=window.open('','_blank','width=500,height=600');
+  w.document.write(`<html><body style="margin:0;background:#000;display:flex;align-items:center;justify-content:center;min-height:100vh;"><img src="${t.photo}" style="max-width:100%;max-height:100vh;"></body></html>`);
 }
 
 function renderJoint(){
@@ -2292,6 +2610,9 @@ function renderConfig(){
   renderWeeklySummary();
   updatePinStatus();
   updateRecoveryBtn();
+  // Update theme toggle state
+  const toggle = document.getElementById('themeToggle');
+  if (toggle) toggle.classList.toggle('on', document.body.classList.contains('light-mode'));
 }
 
 function saveProfile(){
@@ -4102,11 +4423,20 @@ function selectDynamicUser(u, user) {
   document.getElementById('navTabs').style.display = 'flex';
   const av = document.getElementById('topAv');
   av.className = 'top-av n';
-  av.innerHTML = svgU('ic-user', 18, 'var(--accent)');
+  // Use Google profile photo if available
+  const gUser = window._googleUser;
+  if (gUser && gUser.photoURL) {
+    av.innerHTML = `<img src="${gUser.photoURL}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" onerror="this.parentElement.innerHTML='${svgU('ic-user', 18, 'var(--accent)')}'">`;
+  } else {
+    av.innerHTML = svgU('ic-user', 18, 'var(--accent)');
+  }
   document.getElementById('topNm').textContent = user.name;
   document.getElementById('topNm').className = 'top-nm n';
+  applyRecurringTxs();
   switchTab('home', document.querySelector('.nav-tab'));
   render();
+  requestNotificationPermission();
+  setTimeout(() => showTutorial(), 800);
 }
 
 function lockSession() {
@@ -4209,6 +4539,7 @@ async function initFirebaseSync() {
 try { initFirebaseSync(); } catch(e) {}
 
 try { render(); } catch(e) {}
+try { applyStoredTheme(); } catch(e) {}
 
 </script>
 </body>
