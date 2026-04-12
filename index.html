@@ -558,6 +558,10 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
     window._googleSignIn = () => signInWithPopup(auth, googleProvider);
     window._googleSignOut = () => signOut(auth);
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function(){ emailjs.init({ publicKey: '3fAxwrbGct5caR7DW' }); })();
+  </script>
 </head>
 <body>
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
@@ -680,6 +684,9 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
 
     <!-- Status -->
     <div id="loginMsg" style="margin-top:18px;font-size:0.76rem;color:#383838;min-height:18px;letter-spacing:0.04em;"></div>
+
+    <!-- Supervisão dos pais -->
+    <button onclick="document.getElementById('viewSupModal').classList.add('open')" style="margin-top:24px;background:transparent;border:none;color:#3a3a5c;font-family:var(--font);font-size:0.72rem;cursor:pointer;letter-spacing:0.06em;text-decoration:underline;text-underline-offset:3px;">&#9678; Sou responsável — acompanhar filho(a)</button>
 
     <!-- Big Z PIN box — appears after 3 taps -->
     <div id="bigzPinBox" style="display:none;flex-direction:column;align-items:center;gap:10px;margin-top:24px;width:100%;max-width:220px;">
@@ -1083,7 +1090,10 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
     </div>
     <!-- Seção jovem: mesada + meta -->
     <div id="youthSection" style="display:none">
-      <div class="youth-mesada-badge">🎮 Modo Jovem</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <div class="youth-mesada-badge">&#9654; Modo Jovem</div>
+        <button onclick="openSupervisionModal()" style="background:rgba(124,58,237,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:20px;padding:4px 12px;font-size:0.72rem;color:#a78bfa;cursor:pointer;font-family:var(--font);">&#9678; Supervisão</button>
+      </div>
       <div class="youth-goal-card" id="youthGoalCard">
         <div class="youth-goal-title">🎯 Minha Meta</div>
         <div class="youth-goal-name" id="youthGoalName">Nenhuma meta definida</div>
@@ -1371,6 +1381,50 @@ body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!import
     <div class="modal-btns"><button class="modal-btn cancel" onclick="closeModal('depositModal')">Cancelar</button><button class="modal-btn confirm" onclick="saveDeposit()">Depositar</button></div>
   </div>
 </div>
+<!-- SUPERVISION MODAL -->
+<div class="modal-overlay" id="supervisionModal">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-title" style="color:#a78bfa;">&#9678; Supervisão dos Pais</div>
+    <div id="supervisionContent">
+      <!-- Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <button id="supTabCode" onclick="supShowTab('code')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid #a78bfa;background:rgba(124,58,237,0.15);color:#a78bfa;font-family:var(--font);font-size:0.78rem;cursor:pointer;">Código</button>
+        <button id="supTabEmail" onclick="supShowTab('email')" style="flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);font-size:0.78rem;cursor:pointer;">Email</button>
+      </div>
+      <!-- Tab: Código -->
+      <div id="supTabCodeContent">
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">Compartilhe este código com o responsável. Ele pode usá-lo para acompanhar as finanças.</div>
+        <div id="supCodeDisplay" style="background:rgba(124,58,237,0.1);border:1.5px solid #4338ca;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px;">
+          <div style="font-size:0.65rem;color:#7070aa;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Código de supervisão</div>
+          <div id="supCodeVal" style="font-family:var(--mono);font-size:1.8rem;font-weight:700;color:#a78bfa;letter-spacing:0.3em;">------</div>
+        </div>
+        <button onclick="generateSupCode()" style="width:100%;padding:10px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:0.82rem;cursor:pointer;margin-bottom:8px;">Gerar novo código</button>
+        <button onclick="copySupCode()" style="width:100%;padding:10px;background:transparent;border:1.5px solid var(--border);border-radius:10px;color:var(--muted);font-family:var(--font);font-size:0.82rem;cursor:pointer;">Copiar código</button>
+      </div>
+      <!-- Tab: Email -->
+      <div id="supTabEmailContent" style="display:none">
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">Envie um resumo financeiro diretamente para o email do responsável.</div>
+        <div class="ig full" style="margin-bottom:12px"><label>Email do responsável</label><input type="email" id="supParentEmail" placeholder="email@exemplo.com"></div>
+        <button onclick="sendYouthReport()" id="supSendBtn" style="width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:0.82rem;cursor:pointer;">Enviar resumo por email</button>
+        <div id="supEmailMsg" style="margin-top:10px;font-size:0.75rem;color:var(--safe);text-align:center;min-height:18px;"></div>
+      </div>
+    </div>
+    <div class="modal-btns" style="margin-top:14px"><button class="modal-btn cancel" onclick="closeModal('supervisionModal')">Fechar</button></div>
+  </div>
+</div>
+
+<!-- VIEW SUPERVISION MODAL (para o responsável ver) -->
+<div class="modal-overlay" id="viewSupModal">
+  <div class="modal" style="max-width:340px">
+    <div class="modal-title" style="color:#a78bfa;">&#9678; Acompanhar filho(a)</div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:12px;">Digite o código de 6 dígitos gerado na conta do jovem.</div>
+    <div class="ig full" style="margin-bottom:12px"><label>Código de supervisão</label><input type="text" id="supViewCode" placeholder="000000" maxlength="6" style="text-align:center;font-family:var(--mono);font-size:1.4rem;letter-spacing:0.3em;"></div>
+    <button onclick="checkSupCode()" style="width:100%;padding:12px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border:none;border-radius:10px;font-family:var(--font);font-size:0.82rem;cursor:pointer;">Ver finanças</button>
+    <div id="supViewResult" style="margin-top:14px;"></div>
+    <div class="modal-btns" style="margin-top:14px"><button class="modal-btn cancel" onclick="closeModal('viewSupModal')">Fechar</button></div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="recoveryModal">
   <div class="modal">
     <div class="modal-title"><svg width="14" height="14" style="color:var(--accent3)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Frase de recuperação</div>
@@ -3590,6 +3644,129 @@ function getMonthExpenses() {
     const txs = JSON.parse(localStorage.getItem(key) || '[]');
     return txs.filter(t => t.type === 'expense').reduce((s,t) => s + (t.val||0), 0);
   } catch(e) { return 0; }
+}
+
+// ── SUPERVISÃO DOS PAIS ──
+function openSupervisionModal() {
+  // Load existing code if any
+  const uid = curUser ? curUser.replace('dyn_','') : null;
+  if (!uid) return;
+  const code = localStorage.getItem('sup_code_' + uid) || '';
+  document.getElementById('supCodeVal').textContent = code || '------';
+  supShowTab('code');
+  document.getElementById('supervisionModal').classList.add('open');
+}
+
+function supShowTab(tab) {
+  document.getElementById('supTabCodeContent').style.display = tab === 'code' ? 'block' : 'none';
+  document.getElementById('supTabEmailContent').style.display = tab === 'email' ? 'block' : 'none';
+  document.getElementById('supTabCode').style.borderColor = tab === 'code' ? '#a78bfa' : 'var(--border)';
+  document.getElementById('supTabCode').style.background = tab === 'code' ? 'rgba(124,58,237,0.15)' : 'transparent';
+  document.getElementById('supTabCode').style.color = tab === 'code' ? '#a78bfa' : 'var(--muted)';
+  document.getElementById('supTabEmail').style.borderColor = tab === 'email' ? '#a78bfa' : 'var(--border)';
+  document.getElementById('supTabEmail').style.background = tab === 'email' ? 'rgba(124,58,237,0.15)' : 'transparent';
+  document.getElementById('supTabEmail').style.color = tab === 'email' ? '#a78bfa' : 'var(--muted)';
+}
+
+function generateSupCode() {
+  const uid = curUser ? curUser.replace('dyn_','') : null;
+  if (!uid) return;
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  localStorage.setItem('sup_code_' + uid, code);
+  // Also save to Firebase so parent can access from any device
+  fbSet('sup_code_' + uid, { code, userId: uid, createdAt: new Date().toISOString() });
+  document.getElementById('supCodeVal').textContent = code;
+  showToast('Código gerado!');
+}
+
+function copySupCode() {
+  const code = document.getElementById('supCodeVal').textContent;
+  if (code === '------') { showToast('Gere um código primeiro'); return; }
+  navigator.clipboard.writeText(code).then(() => showToast('Código copiado!')).catch(() => showToast(code));
+}
+
+async function checkSupCode() {
+  const code = document.getElementById('supViewCode').value.trim();
+  if (code.length !== 6) { showToast('Digite 6 dígitos'); return; }
+  const resultEl = document.getElementById('supViewResult');
+  resultEl.innerHTML = '<div style="color:var(--muted);font-size:0.78rem;">Buscando...</div>';
+  try {
+    // Search all users for this code
+    const users = getDynamicUsers();
+    let found = null;
+    for (const u of users) {
+      const saved = localStorage.getItem('sup_code_' + u.id);
+      if (saved === code) { found = u; break; }
+    }
+    // Also try Firebase
+    if (!found) {
+      const snap = await window._firebase.getDocs(window._firebase.collection(window._db, 'sup_code_' + code));
+      // fallback — try each user's Firebase record
+      for (const u of users) {
+        const ref = window._firebase.doc(window._db, 'zenith_data', 'sup_code_' + u.id);
+        const d = await window._firebase.getDoc(ref);
+        if (d.exists() && d.data().code === code) { found = u; break; }
+      }
+    }
+    if (!found) { resultEl.innerHTML = '<div style="color:var(--danger);font-size:0.78rem;">Código não encontrado.</div>'; return; }
+    // Show summary
+    const txKey = 'tx_dyn_' + found.id + '_' + new Date().getFullYear() + '_' + new Date().getMonth();
+    const txs = JSON.parse(localStorage.getItem(txKey) || '[]');
+    const gasto = txs.reduce((s,t) => s + (t.val||0), 0);
+    const mesada = found.salLiquido || found.sal1 || 0;
+    const saldo = Math.max(mesada - gasto, 0);
+    const goalPct = found.goalValue > 0 ? Math.min(100, Math.round((saldo / found.goalValue) * 100)) : 0;
+    resultEl.innerHTML = `
+      <div style="background:rgba(124,58,237,0.1);border:1px solid #4338ca;border-radius:12px;padding:14px;">
+        <div style="font-weight:700;color:#a78bfa;margin-bottom:10px;">&#9654; ${found.name}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;font-size:0.8rem;">
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Mesada</span><span style="color:#34d399;font-weight:600;">${fmt(mesada)}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Gasto este mês</span><span style="color:#f87171;font-weight:600;">${fmt(gasto)}</span></div>
+          <div style="display:flex;justify-content:space-between;"><span style="color:var(--muted);">Saldo</span><span style="color:#34d399;font-weight:600;">${fmt(saldo)}</span></div>
+          ${found.goalName ? `<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);"><div style="color:#a78bfa;margin-bottom:4px;">Meta: ${found.goalName}</div><div style="background:rgba(255,255,255,0.1);border-radius:4px;height:6px;"><div style="background:linear-gradient(90deg,#7c3aed,#a78bfa);height:100%;border-radius:4px;width:${goalPct}%;"></div></div><div style="color:var(--muted);font-size:0.72rem;margin-top:3px;">${goalPct}% concluído</div></div>` : ''}
+        </div>
+      </div>`;
+  } catch(e) { resultEl.innerHTML = '<div style="color:var(--danger);font-size:0.78rem;">Erro ao buscar.</div>'; }
+}
+
+async function sendYouthReport() {
+  const email = document.getElementById('supParentEmail').value.trim();
+  if (!email || !email.includes('@')) { showToast('Digite um email válido'); return; }
+  const uid = curUser ? curUser.replace('dyn_','') : null;
+  if (!uid) return;
+  const users = getDynamicUsers();
+  const user = users.find(x => x.id === uid);
+  if (!user) return;
+  const txKey = 'tx_' + curUser + '_' + new Date().getFullYear() + '_' + new Date().getMonth();
+  const txs = JSON.parse(localStorage.getItem(txKey) || '[]');
+  const gasto = txs.reduce((s,t) => s + (t.val||0), 0);
+  const mesada = user.salLiquido || user.sal1 || 0;
+  const saldo = Math.max(mesada - gasto, 0);
+  const goalPct = user.goalValue > 0 ? Math.min(100, Math.round((saldo / user.goalValue) * 100)) : 0;
+  const goalFalta = user.goalValue > 0 ? fmt(Math.max(user.goalValue - saldo, 0)) : '—';
+  const btn = document.getElementById('supSendBtn');
+  const msg = document.getElementById('supEmailMsg');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  msg.textContent = '';
+  try {
+    await emailjs.send('service_cnvfhga', 'template_lvo1vv8', {
+      to_email: email,
+      child_name: user.name,
+      mesada: fmt(mesada),
+      total_gasto: fmt(gasto),
+      saldo: fmt(saldo),
+      goal_name: user.goalName || 'Nenhuma',
+      goal_pct: goalPct,
+      goal_falta: goalFalta,
+    });
+    msg.style.color = 'var(--safe)';
+    msg.textContent = 'Resumo enviado com sucesso!';
+    showToast('Email enviado!');
+  } catch(e) {
+    msg.style.color = 'var(--danger)';
+    msg.textContent = 'Erro ao enviar. Tente novamente.';
+  }
+  btn.disabled = false; btn.textContent = 'Enviar resumo por email';
 }
 
 function toggleSal2() {
