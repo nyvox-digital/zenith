@@ -481,6 +481,41 @@ canvas{width:100%!important;}
   /* ─── alertsArea vazio: não ocupa espaço no grid ─── */
   #alertsArea:empty{display:none;}
 }
+
+/* ══════════════════════════════════════
+   MODO JOVEM 🎮
+══════════════════════════════════════ */
+body.youth-mode{
+  --bg:#0d0d1a;--bg2:#12122a;--card:#1a1a35;--card2:#20204a;
+  --border:#2d2d6a;--border2:#3d3d8a;
+  --accent:#a78bfa;--accent2:#f472b6;--accent3:#ffffff;
+  --blue:#60a5fa;--pink:#f9a8d4;--orange:#fb923c;--purple:#c084fc;
+  --text:#f0f0ff;--muted:#7070aa;--muted2:#5555aa;
+  --safe:#34d399;--danger:#f87171;
+  --grad-card:linear-gradient(145deg,#20204a,#1a1a35);
+  --grad-accent:linear-gradient(135deg,#a78bfa,#7c3aed);
+}
+body.youth-mode .balance-hero{
+  background:linear-gradient(135deg,#1e1b4b,#312e81);
+  border-color:#4338ca;
+}
+body.youth-mode .balance-hero.n::before{background:linear-gradient(90deg,#7c3aed,#a78bfa,#c084fc)!important;}
+body.youth-mode .nav-tabs{background:rgba(13,13,26,0.97);}
+body.youth-mode .pin-key{box-shadow:0 4px 16px rgba(100,80,200,0.3);}
+body.youth-mode .btn-add{background:linear-gradient(135deg,#7c3aed,#a78bfa)!important;color:#fff!important;}
+body.youth-mode .prog-card{border-color:#3d3d8a;}
+body.youth-mode .pbar-f{background:linear-gradient(90deg,#7c3aed,#a78bfa)!important;}
+
+/* Cartão de meta jovem */
+.youth-goal-card{background:linear-gradient(135deg,#1e1b4b,#312e81);border:1px solid #4338ca;border-radius:18px;padding:18px;margin-bottom:12px;}
+.youth-goal-title{font-size:0.72rem;color:#a78bfa;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+.youth-goal-name{font-size:1rem;font-weight:700;color:#f0f0ff;margin-bottom:12px;}
+.youth-goal-bar-bg{background:rgba(255,255,255,0.1);border-radius:8px;height:10px;margin-bottom:8px;overflow:hidden;}
+.youth-goal-bar-f{height:100%;border-radius:8px;background:linear-gradient(90deg,#7c3aed,#a78bfa,#f9a8d4);transition:width 0.6s cubic-bezier(.4,0,.2,1);}
+.youth-goal-vals{display:flex;justify-content:space-between;font-size:0.77rem;color:#a0a0cc;margin-bottom:4px;}
+.youth-goal-pct{font-size:1.4rem;font-weight:800;color:#a78bfa;text-align:center;margin-bottom:2px;}
+.youth-goal-msg{font-size:0.74rem;color:#7070aa;text-align:center;}
+.youth-mesada-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.15);border:1px solid rgba(167,139,250,0.3);border-radius:20px;padding:4px 12px;font-size:0.72rem;color:#a78bfa;margin-bottom:12px;}
 </style>
   <!-- Firebase SDK -->
   <script type="module">
@@ -799,7 +834,48 @@ canvas{width:100%!important;}
       <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px">Como se chama?</div>
       <div style="font-size:0.82rem;color:var(--text);margin-bottom:20px">Este nome vai aparecer na tela inicial.</div>
       <div class="ig full" style="margin-bottom:20px"><label>Nome completo</label><input type="text" id="cu-name" placeholder="Ex: João, Maria..."></div>
+      <!-- Tipo de conta -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em;">Tipo de conta</div>
+        <div style="display:flex;gap:10px">
+          <button id="cuTypeAdult" onclick="setCuType('adult')" style="flex:1;padding:14px 10px;border-radius:14px;border:1.5px solid var(--accent);background:rgba(224,224,224,0.08);color:var(--text);font-family:var(--font);font-size:0.85rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.2s;">
+            <span style="font-size:1.4rem;">👤</span>
+            <span style="font-weight:600;">Adulto</span>
+            <span style="font-size:0.7rem;color:var(--muted);">Salário, contas</span>
+          </button>
+          <button id="cuTypeYouth" onclick="setCuType('youth')" style="flex:1;padding:14px 10px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-family:var(--font);font-size:0.85rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all 0.2s;">
+            <span style="font-size:1.4rem;">🎮</span>
+            <span style="font-weight:600;">Jovem</span>
+            <span style="font-size:0.7rem;">Mesada, metas</span>
+          </button>
+        </div>
+      </div>
       <button class="btn-add" onclick="cuNext(1)">Continuar →</button>
+    </div>
+
+    <!-- Step 2: Salário (youth version) -->
+    <div id="cuStep2Youth" style="display:none">
+      <div style="font-size:1.4rem;margin-bottom:4px">💰</div>
+      <div style="font-size:1.1rem;font-weight:700;margin-bottom:6px">Qual é a sua mesada?</div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:20px">Quanto você recebe por mês? Pode deixar em zero se não souber ainda.</div>
+      <div class="ig full" style="margin-bottom:14px"><label>Valor da mesada (R$)</label><input type="number" id="cu-mesada" placeholder="0,00" step="0.01" min="0"></div>
+      <div class="ig full" style="margin-bottom:20px">
+        <label>Dia que recebe</label>
+        <input type="number" id="cu-mesada-day" placeholder="Ex: 1" min="1" max="31">
+      </div>
+      <!-- Meta de economia -->
+      <div style="background:rgba(124,58,237,0.1);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:14px;margin-bottom:20px;">
+        <div style="font-size:0.8rem;font-weight:600;color:#a78bfa;margin-bottom:4px;">🎯 Minha meta de economia</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;">Tem algo que quer guardar dinheiro para comprar?</div>
+        <div class="ig full" style="margin-bottom:10px"><label>O que quero comprar?</label><input type="text" id="cu-goal-name" placeholder="Ex: Tênis, videogame, viagem..."></div>
+        <div class="ig full"><label>Quanto custa? (R$)</label><input type="number" id="cu-goal-value" placeholder="0,00" step="0.01" min="0"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+        <button class="btn-add" onclick="cuNextYouth(2)">Continuar →</button>
+        <button onclick="showCUStep(1)" style="background:transparent;border:none;color:var(--muted);font-family:var(--font);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Voltar
+        </button>
+      </div>
     </div>
 
     <!-- Step 2: Salário -->
@@ -1005,9 +1081,25 @@ canvas{width:100%!important;}
       <div class="goal-bar-bg"><div class="goal-bar-f" id="goalBar" style="width:0%"></div></div>
       <div class="goal-status" id="goalStatus"></div>
     </div>
-    <p class="sec">Salários</p>
+    <!-- Seção jovem: mesada + meta -->
+    <div id="youthSection" style="display:none">
+      <div class="youth-mesada-badge">🎮 Modo Jovem</div>
+      <div class="youth-goal-card" id="youthGoalCard">
+        <div class="youth-goal-title">🎯 Minha Meta</div>
+        <div class="youth-goal-name" id="youthGoalName">Nenhuma meta definida</div>
+        <div class="youth-goal-bar-bg"><div class="youth-goal-bar-f" id="youthGoalBar" style="width:0%"></div></div>
+        <div class="youth-goal-vals">
+          <span>Guardado: <span id="youthGoalSaved">R$ 0,00</span></span>
+          <span>Meta: <span id="youthGoalTarget">—</span></span>
+        </div>
+        <div class="youth-goal-pct" id="youthGoalPct">0%</div>
+        <div class="youth-goal-msg" id="youthGoalMsg">Continue economizando! 💪</div>
+      </div>
+    </div>
+
+    <p class="sec" id="salLabel">Salários</p>
     <div class="sal-row">
-      <div class="sal-c"><label>1º Salário</label><div class="sv s1" id="sal1">—</div><div class="sd"><svg width="12" height="12"><use href="#ic-cal"/></svg> Dia 20</div></div>
+      <div class="sal-c"><label id="sal1Label">1º Salário</label><div class="sv s1" id="sal1">—</div><div class="sd"><svg width="12" height="12"><use href="#ic-cal"/></svg> Dia 20</div></div>
       <div class="sal-c"><label>2º Salário</label><div class="sv s2" id="sal2">—</div><div class="sd"><svg width="12" height="12"><use href="#ic-cal"/></svg> Dia 30</div></div>
     </div>
     <p class="sec">Parcelas</p>
@@ -1554,6 +1646,7 @@ function goBack(){
   Object.keys(_txCache).forEach(k=>delete _txCache[k]);
   Object.keys(_genericCache).forEach(k=>delete _genericCache[k]);
   curUser=null;isJoint=false;
+  applyYouthMode(false);
   document.getElementById('app').style.display='none';
   document.getElementById('navTabs').style.display='none';
   document.getElementById('userScreen').style.display='flex';
@@ -1934,6 +2027,8 @@ function render(){
   const livres=income-fixedGrand;const totalBenef=ud.benefits.va+ud.benefits.vr;
   document.getElementById('tipList').innerHTML=`<li>Renda: <strong style="color:var(--accent)">${fmt(income)}/mês</strong></li><li>iFood Benefícios: <strong style="color:#e0a020">+ ${fmt(totalBenef)}</strong></li><li>Parcelas + fixos: <strong style="color:var(--accent2)">${fmt(fixedGrand)}</strong> (${Math.round(fixedGrand/income*100)}% da renda)</li><li>Disponível após fixos: <strong style="color:var(--accent3)">${fmt(livres)}</strong></li><li>Já gastou este mês: <strong style="color:var(--accent2)">${fmt(varTotal)}</strong></li><li>Saldo: <strong style="color:${balance>=0?'var(--safe)':'var(--danger)'}">${(balance<0?'- ':'')+fmt(balance)}</strong></li><li>Limite seguro do cartão: <strong>${fmt(ud.cardLimit*0.3)}</strong></li>`;
   renderTxList();
+  // Youth mode extra render
+  if (curUser && USERS[curUser] && USERS[curUser]._isYouth) renderYouthGoal();
 }
 
 function renderTxList(){
@@ -3326,6 +3421,11 @@ function openCreateUser(fromAdmin = false) {
   if (fixedList) fixedList.innerHTML = '';
   const instList = document.getElementById('cu-inst-list');
   if (instList) instList.innerHTML = '';
+  // Reset youth fields
+  ['cu-mesada','cu-mesada-day','cu-goal-name','cu-goal-value'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+  const youthEl = document.getElementById('cuStep2Youth'); if (youthEl) youthEl.style.display = 'none';
+  // Default type = adult
+  setCuType('adult');
   cuUpdateDots();
   showCUStep(1);
   document.getElementById('createUserScreen').style.display = 'block';
@@ -3353,6 +3453,7 @@ function cuNext(from) {
     const name = document.getElementById('cu-name').value.trim();
     if (!name) { showToast('Digite o nome'); return; }
     cuData.name = name;
+    if (cuData.isYouth) { showCUStepYouth(2); return; }
     showCUStep(2);
   } else if (from === 2) {
     const sal1 = parseFloat(document.getElementById('cu-sal1').value) || 0;
@@ -3385,6 +3486,110 @@ function cuNext(from) {
     cuData.installments = cuCollectInsts();
     showCUStep(7);
   }
+}
+
+// ── YOUTH MODE ──
+function setCuType(type) {
+  cuData.isYouth = (type === 'youth');
+  const adultBtn = document.getElementById('cuTypeAdult');
+  const youthBtn = document.getElementById('cuTypeYouth');
+  if (type === 'adult') {
+    adultBtn.style.borderColor = 'var(--accent)'; adultBtn.style.background = 'rgba(224,224,224,0.08)'; adultBtn.style.color = 'var(--text)';
+    youthBtn.style.borderColor = 'var(--border)'; youthBtn.style.background = 'transparent'; youthBtn.style.color = 'var(--muted)';
+  } else {
+    youthBtn.style.borderColor = '#a78bfa'; youthBtn.style.background = 'rgba(124,58,237,0.15)'; youthBtn.style.color = '#a78bfa';
+    adultBtn.style.borderColor = 'var(--border)'; adultBtn.style.background = 'transparent'; adultBtn.style.color = 'var(--muted)';
+  }
+}
+
+function showCUStepYouth(n) {
+  // Hide all regular steps and youth step
+  for (let i = 1; i <= 7; i++) {
+    const el = document.getElementById('cuStep' + i); if (el) el.style.display = 'none';
+    const dot = document.getElementById('cdot' + (i-1)); if (dot) dot.style.background = 'var(--border)';
+  }
+  const youthEl = document.getElementById('cuStep2Youth');
+  if (youthEl) youthEl.style.display = n === 2 ? 'block' : 'none';
+  // Show step 7 (PIN) for youth too
+  if (n === 7) {
+    const el = document.getElementById('cuStep7'); if (el) el.style.display = 'block';
+  }
+  ['cdot0','cdot1'].forEach((id,i) => {
+    const dot = document.getElementById(id); if (dot) dot.style.background = 'var(--accent)';
+  });
+}
+
+function cuNextYouth(from) {
+  if (from === 2) {
+    const mesada = parseFloat(document.getElementById('cu-mesada').value) || 0;
+    const mesadaDay = parseInt(document.getElementById('cu-mesada-day').value) || 1;
+    const goalName = document.getElementById('cu-goal-name').value.trim();
+    const goalValue = parseFloat(document.getElementById('cu-goal-value').value) || 0;
+    cuData.regime = 'autonomo'; cuData.sal1 = mesada; cuData.sal1Day = mesadaDay;
+    cuData.sal2 = 0; cuData.sal2Day = null; cuData.freq = '1';
+    cuData.liq1 = mesada; cuData.liq2 = 0; cuData.salLiquido = mesada;
+    cuData.va = 0; cuData.vr = 0; cuData.vt = 0;
+    cuData.hasCard = false; cuData.cardLimit = 0;
+    cuData.fixedBills = []; cuData.installments = [];
+    cuData.goalName = goalName; cuData.goalValue = goalValue;
+    // Go straight to PIN step
+    showCUStepYouth(7);
+    cuStep = 7;
+  }
+}
+
+function applyYouthMode(on) {
+  if (on) {
+    document.body.classList.add('youth-mode');
+    document.getElementById('youthSection').style.display = 'block';
+    const salLabel = document.getElementById('salLabel');
+    if (salLabel) salLabel.textContent = 'Mesada';
+    const sal1Label = document.getElementById('sal1Label');
+    if (sal1Label) sal1Label.textContent = 'Mesada mensal';
+  } else {
+    document.body.classList.remove('youth-mode');
+    document.getElementById('youthSection').style.display = 'none';
+    const salLabel = document.getElementById('salLabel');
+    if (salLabel) salLabel.textContent = 'Salários';
+    const sal1Label = document.getElementById('sal1Label');
+    if (sal1Label) sal1Label.textContent = '1º Salário';
+  }
+}
+
+function renderYouthGoal() {
+  const u = curUser;
+  if (!u || !u.startsWith('dyn_')) return;
+  const uid = u.replace('dyn_','');
+  const users = getDynamicUsers();
+  const user = users.find(x => x.id === uid);
+  if (!user || !user.isYouth) return;
+  const goalName = user.goalName || '';
+  const goalValue = user.goalValue || 0;
+  // Calculate saved = current balance (income - expenses for all months)
+  const saved = Math.max(0, (user.salLiquido || 0) - getMonthExpenses());
+  const nameEl = document.getElementById('youthGoalName');
+  const savedEl = document.getElementById('youthGoalSaved');
+  const targetEl = document.getElementById('youthGoalTarget');
+  const barEl = document.getElementById('youthGoalBar');
+  const pctEl = document.getElementById('youthGoalPct');
+  const msgEl = document.getElementById('youthGoalMsg');
+  if (nameEl) nameEl.textContent = goalName || 'Nenhuma meta definida';
+  if (savedEl) savedEl.textContent = fmt(saved);
+  if (targetEl) targetEl.textContent = goalValue > 0 ? fmt(goalValue) : '—';
+  const pct = goalValue > 0 ? Math.min(100, Math.round((saved / goalValue) * 100)) : 0;
+  if (barEl) barEl.style.width = pct + '%';
+  if (pctEl) pctEl.textContent = pct + '%';
+  const msgs = ['Continue economizando! 💪', 'Você está no caminho certo! 🚀', 'Quase lá! Continue assim! ⭐', '🎉 Meta alcançada! Parabéns!'];
+  if (msgEl) msgEl.textContent = pct >= 100 ? msgs[3] : pct >= 66 ? msgs[2] : pct >= 33 ? msgs[1] : msgs[0];
+}
+
+function getMonthExpenses() {
+  // Simple estimate from current session
+  try {
+    const key = 'tx_' + curUser + '_' + curYear + '_' + curMonth;
+    const txs = JSON.parse(localStorage.getItem(key) || '[]');
+    return txs.filter(t => t.type === 'expense').reduce((s,t) => s + (t.val||0), 0);
+  } catch(e) { return 0; }
 }
 
 function toggleSal2() {
@@ -3530,6 +3735,9 @@ async function finishCreateUser(pinHash) {
     fixedBills: cuData.fixedBills || [],
     installments: cuData.installments || [],
     googleEmail: gUser ? gUser.email : null,
+    isYouth: cuData.isYouth || false,
+    goalName: cuData.goalName || '',
+    goalValue: cuData.goalValue || 0,
     createdAt: new Date().toISOString()
   };
   const users = getDynamicUsers();
@@ -3706,8 +3914,9 @@ function selectDynamicUser(u, user) {
     cardLimit: user.cardLimit || 0,
     benefits: { va: user.va || 0, vr: user.vr || 0 },
     installments: savedInsts, fixed: savedFixed,
-    _dynamic: true, _id: user.id
+    _dynamic: true, _id: user.id, _isYouth: user.isYouth || false
   };
+  applyYouthMode(user.isYouth || false);
   curUser = u; isJoint = false;
   curMonth = new Date().getMonth(); curYear = new Date().getFullYear();
   annualYear = curYear; txFilter = 'all';
@@ -3730,6 +3939,7 @@ function lockSession() {
   Object.keys(_txCache).forEach(k => delete _txCache[k]);
   Object.keys(_genericCache).forEach(k => delete _genericCache[k]);
   curUser = null; isJoint = false;
+  applyYouthMode(false);
   document.getElementById('app').style.display = 'none';
   document.getElementById('navTabs').style.display = 'none';
   // Re-show PIN if still signed in with Google
